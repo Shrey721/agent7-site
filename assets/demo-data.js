@@ -1,5 +1,5 @@
 /* ============================================================
-   AgentGov — static demo fixture for the public demo dashboard.
+   Agent7 — static demo fixture for the public demo dashboard.
 
    This file is the ONLY data source for dashboard.html. There is no
    backend, no fetch(), and no network access of any kind.
@@ -29,7 +29,7 @@
 
   /* ---------- shared: the real 17-field coverage matrix ----------
      Field list and statuses follow services/evidence_api/coverage.py.
-     The unflattering entries are kept on purpose: AgentGov reports
+     The unflattering entries are kept on purpose: Agent7 reports
      missing and annotation-required fields rather than fabricating them. */
   function coverageFields(overrides) {
     var base = [
@@ -129,7 +129,7 @@
       ACAP: {
         clause: "authorization_boundary",
         requirement: "Runtime tool use must be contained within allowed_capabilities",
-        note: "ACAP is AgentGov's own contract, not an external standard."
+        note: "ACAP is Agent7's own contract, not an external standard."
       },
       NIST_AI_RMF: {
         function: "GOVERN",
@@ -940,7 +940,7 @@
     }
   };
 
-  window.AGENTGOV_DEMO = {
+  window.AGENT7_DEMO = {
     generated_at: "2026-09-15T00:00:00+00:00",
     note: "Static stakeholder demo fixture. Synthetic data only. No backend.",
     systems: [GAMING, SUPPORT]

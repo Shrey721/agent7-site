@@ -1,9 +1,9 @@
 /* ============================================================
-   AgentGov — static demo dashboard controller.
+   Agent7 — static demo dashboard controller.
 
    Purpose-built for the public site. There is no backend:
      * no fetch(), no XHR, no WebSocket, no localhost
-     * the only data source is window.AGENTGOV_DEMO (demo-data.js)
+     * the only data source is window.AGENT7_DEMO (demo-data.js)
      * every action mutates in-memory state and re-renders
 
    Render pipeline and helper semantics intentionally mirror the real
@@ -13,7 +13,7 @@
 (function () {
   "use strict";
 
-  var DEMO = window.AGENTGOV_DEMO;
+  var DEMO = window.AGENT7_DEMO;
 
   /* ============================ helpers ============================ */
 

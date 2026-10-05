@@ -1,5 +1,5 @@
 /* ============================================================
-   AgentGov Product Landing Page — Polished
+   Agent7 Product Landing Page — Polished
    Scroll-driven timeline, reveal animations, nav behavior,
    capability card interactions, stat count-up.
    All UI data is static — no backend API calls.

@@ -1,17 +1,19 @@
-# AgentGov — public product site (`vercel-site/`)
+# Agent7 — public product site
 
-A **standalone, frontend-only** copy of the AgentGov product website plus an interactive
+A **standalone, frontend-only** copy of the Agent7 product website plus an interactive
 demo dashboard, ready to deploy to Vercel as the public marketing site.
 
 There is no backend here. No FastAPI, no database, no API calls, no `localhost`.
 Everything renders from a static fixture in the browser.
+
+The site lives at the **repository root** — `index.html`, `dashboard.html`, `assets/`
+and `vercel.json` are all top-level. There is no build step and no `package.json`.
 
 ---
 
 ## Run locally
 
 ```bash
-cd vercel-site
 python -m http.server 3000
 ```
 
@@ -28,16 +30,87 @@ the demo data is a plain `<script>` include, so nothing is blocked by `file://` 
 
 ---
 
+## Push to GitHub
+
+The repo already has its remote configured:
+
+```bash
+git remote -v
+# origin  git@github-a:Shrey721/agentgov-site.git
+```
+
+To publish your changes:
+
+```bash
+git status                      # review what changed
+git add -A
+git commit -m "Rename product to Agent7"
+git push origin main
+```
+
+If `git push` fails on the SSH host alias, either check that `github-a` is defined in
+`~/.ssh/config`, or switch the remote to HTTPS and let the GitHub CLI handle auth:
+
+```bash
+gh auth status                  # confirm you are logged in
+git remote set-url origin https://github.com/Shrey721/agentgov-site.git
+git push origin main
+```
+
+> The GitHub repo is still named `agentgov-site`. Renaming it is optional and does not
+> affect the site. If you do rename it, update the remote URL to match
+> (`git remote set-url origin …`) and re-point the Vercel project's Git connection.
+
+---
+
 ## Deploy to Vercel
 
-1. Push this repository to your Git host.
-2. In Vercel, **New Project** → import the repo.
-3. Set **Root Directory** to `vercel-site`.
-4. Framework Preset: **Other**. Leave Build Command and Output Directory empty —
-   this is a plain static site with no build step and no `package.json`.
-5. Deploy.
+### First deploy (dashboard import)
 
-`vercel.json` handles routing:
+1. Push to GitHub first — Vercel deploys from the repo, not from your local folder.
+2. Go to [vercel.com/new](https://vercel.com/new) → **Import Git Repository** →
+   select `Shrey721/agentgov-site`.
+3. **Root Directory:** leave it as the repository root (`./`). Do not set a
+   subdirectory — the HTML files are at the top level.
+4. **Framework Preset:** **Other**.
+5. Leave **Build Command** and **Output Directory** empty. This is a plain static site;
+   there is nothing to build and no `package.json` for Vercel to detect.
+6. No environment variables are needed — the site makes no API calls.
+7. Click **Deploy**. It finishes in a few seconds and gives you a
+   `https://<project>.vercel.app` URL.
+
+### Every deploy after that
+
+Pushing to `main` redeploys production automatically:
+
+```bash
+git add -A
+git commit -m "your change"
+git push origin main
+```
+
+Pushes to any other branch get their own preview URL, which is the safe way to review a
+change before it goes live.
+
+### Alternative: deploy from the CLI
+
+Useful for a quick throwaway deploy without wiring up Git:
+
+```bash
+npm i -g vercel
+vercel login
+vercel          # preview deploy, prompts you through project setup
+vercel --prod   # promote to production
+```
+
+### Custom domain
+
+In the Vercel project: **Settings → Domains → Add**, enter your domain, then add the DNS
+records Vercel shows you at your registrar. HTTPS is issued automatically.
+
+### Routing
+
+`vercel.json` handles routing and headers:
 
 | Route | Serves |
 |---|---|
@@ -46,23 +119,25 @@ the demo data is a plain `<script>` include, so nothing is blocked by `file://` 
 | `/dashboard.html` | `dashboard.html` (direct) |
 | `/assets/*` | static assets, cached 1 hour |
 
+It also sets `X-Content-Type-Options`, `Referrer-Policy` and `X-Frame-Options` on every
+response.
+
 ---
 
 ## What is in here
 
 ```
-vercel-site/
-  index.html              product landing page
-  dashboard.html          static interactive demo console
-  assets/
-    styles.css            product page theme      (verbatim copy)
-    app.js                product page behaviour  (verbatim copy)
-    dashboard.css         dashboard theme         (verbatim copy)
-    dashboard.js          demo console controller (written for this site)
-    demo-data.js          the entire demo dataset
-    favicon.svg
-  vercel.json
-  README.md
+index.html              product landing page
+dashboard.html          static interactive demo console
+assets/
+  styles.css            product page theme      (verbatim copy)
+  app.js                product page behaviour  (verbatim copy)
+  dashboard.css         dashboard theme         (verbatim copy)
+  dashboard.js          demo console controller (written for this site)
+  demo-data.js          the entire demo dataset
+  favicon.svg
+vercel.json
+README.md
 ```
 
 `styles.css`, `app.js` and `dashboard.css` are byte-identical copies of the files the
@@ -72,7 +147,7 @@ operational service serves, so the public site looks exactly like the real produ
 
 ## Static demo vs. the real dashboard
 
-| | This site (`vercel-site/`) | Real operational console |
+| | This site (static) | Real operational console |
 |---|---|---|
 | Hosting | Vercel, static | FastAPI service at `/ui/` |
 | Data source | `assets/demo-data.js` | Evidence API + SQLite evidence store |
@@ -90,9 +165,9 @@ operational service serves, so the public site looks exactly like the real produ
 
 > **Warning.** This is a stakeholder demo, not the product.
 > The operational dashboard — the one that reads real runtime evidence, persists review
-> decisions and generates real ACAP versions — still runs inside the AgentGov service at
+> decisions and generates real ACAP versions — still runs inside the Agent7 service at
 > `/ui/`, alongside the Evidence API, SDK, scanner, ACAP generation and runtime rules.
-> Nothing in this folder replaces it, and nothing in this folder talks to it.
+> Nothing in this repo replaces it, and nothing in this repo talks to it.
 
 ---
 
@@ -131,7 +206,7 @@ for exactly that reason.
 
 ## Demo data
 
-Single source of truth: **`assets/demo-data.js`** (`window.AGENTGOV_DEMO`). Edit that file
+Single source of truth: **`assets/demo-data.js`** (`window.AGENT7_DEMO`). Edit that file
 to change the demo; there is no build step.
 
 Its shapes mirror the real Evidence API responses (discovery, ACAP versions, coverage,
@@ -166,5 +241,8 @@ The site keeps the four-clause principle end to end:
 Observed behavior is never treated as authorization. The scanner proposes a catalog; a
 person approves the operating boundary; runtime evidence shows what actually happened.
 
+---
 
-## Deployed Vercel URL: 
+## Deployed Vercel URL
+
+_Not deployed yet — paste the production URL here after the first deploy._
